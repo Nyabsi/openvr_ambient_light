@@ -211,8 +211,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     // Main message loop:
     while (g_bRun)
     {
+        bool bHasMessages = false;
+
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
+            bHasMessages = true;
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);
@@ -222,6 +225,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
         if (g_asyncData.SteamVRInitialized && vr::VRSystem()->PollNextEvent(&event, sizeof(event)))
         {
+            bHasMessages = true;
             if (event.eventType == vr::VREvent_Quit)
             {
                 vr::VRSystem()->AcknowledgeQuit_Exiting();
@@ -232,7 +236,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             }
         }
 
-        std::this_thread::yield();
+        if (!bHasMessages)
+        {
+            if (IsWindowVisible(g_hSettingsWindow))
+            {
+                std::this_thread::yield();
+                
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        }
     }
 
     g_logger->info("Shutting down...");
