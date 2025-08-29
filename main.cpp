@@ -230,8 +230,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             {
                 vr::VRSystem()->AcknowledgeQuit_Exiting();
                 g_logger->info("SteamVR telling application to quit");
-                RemoveTrayIcon();
-                PostQuitMessage(0);
+                
                 g_bRun = false;
             }
         }
@@ -251,6 +250,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     }
 
     g_logger->info("Shutting down...");
+
+    DestroyWindow(g_hSettingsWindow);
+    RemoveTrayIcon();
+    PostQuitMessage(0);
 
     g_settingsMenu.reset();
 
@@ -605,7 +608,7 @@ LRESULT CALLBACK ProcessWindowMessages(HWND hWnd, UINT message, WPARAM wParam, L
 
             case IDM_EXIT:
 
-                DestroyWindow(hWnd);
+                g_bRun = false;
                 break;
 
             default:
@@ -629,7 +632,7 @@ LRESULT CALLBACK ProcessWindowMessages(HWND hWnd, UINT message, WPARAM wParam, L
     case WM_CLOSE:
         if (g_bExitOnClose)
         {
-            DestroyWindow(hWnd);
+            g_bRun = false;
         }
         else
         {
@@ -641,8 +644,6 @@ LRESULT CALLBACK ProcessWindowMessages(HWND hWnd, UINT message, WPARAM wParam, L
 
     case WM_DESTROY:
         g_bRun = false;
-        RemoveTrayIcon();
-        PostQuitMessage(0);
         break;
 
 
@@ -694,7 +695,7 @@ LRESULT CALLBACK ProcessWindowMessages(HWND hWnd, UINT message, WPARAM wParam, L
 
     case WM_MENU_QUIT:
 
-        DestroyWindow(hWnd);
+        g_bRun = false;
 
         break;
 
