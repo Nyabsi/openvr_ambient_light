@@ -18,7 +18,7 @@
 #include "main.h"
 
 
-#define APP_VERSION "1.0.0"
+#define APP_VERSION "1.1.0"
 
 #define MAX_LOADSTRING 100
 

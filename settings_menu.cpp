@@ -363,8 +363,7 @@ if (bIsActiveTab) { ImGui::PopStyleColor(1); bIsActiveTab = false; }
 
 		IMGUI_BIG_SPACING;
 		
-		ImGui::BeginChild("Sep3", ImVec2(0, -ImGui::GetFrameHeightWithSpacing() - 140));
-		ImGui::EndChild();
+		
 
 		ImGui::Checkbox("Lock Sample Rate to HMD VSync", &mainSettings.LockSampleRateToHMD);
 
@@ -376,6 +375,9 @@ if (bIsActiveTab) { ImGui::PopStyleColor(1); bIsActiveTab = false; }
 		TextDescription("Disable the Lock setting and adjust the sample rate down if the lights are flickering.");
 
 		IMGUI_BIG_SPACING;
+
+		ImGui::BeginChild("Sep3", ImVec2(0, -ImGui::GetFrameHeightWithSpacing() - 32));
+		ImGui::EndChild();
 
 		if (ImGui::Button("Reset To Defaults", tabButtonSize))
 		{
