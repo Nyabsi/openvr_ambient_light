@@ -10,8 +10,9 @@ struct Settings_Main
 	bool EnableLights = true; // Transient
 	bool EnableLightsOnStartup = true;
 	bool StartWithSteamVR = false;
-	bool SkipMirrorTextureRelease = true;
 
+	bool LockSampleRateToHMD = true;
+	int SampleRate = 120;
 	int NumLights = 18;
 
 	bool SwapLeftRight = false;
@@ -48,10 +49,12 @@ struct Settings_Main
 	void ParseSettings(CSimpleIniA& ini, const char* section)
 	{
 		InterfaceConfigured = ini.GetBoolValue(section, "InterfaceConfigured", InterfaceConfigured);
-		EnableLightsOnStartup = ini.GetBoolValue(section, "EnableLightsOnStartup", EnableLightsOnStartup);
-		NumLights = (int)ini.GetLongValue(section, "NumLights", NumLights);
+		EnableLightsOnStartup = ini.GetBoolValue(section, "EnableLightsOnStartup", EnableLightsOnStartup);	
 		StartWithSteamVR = ini.GetBoolValue(section, "StartWithSteamVR", StartWithSteamVR);
-		SkipMirrorTextureRelease = ini.GetBoolValue(section, "SkipMirrorTextureRelease", SkipMirrorTextureRelease);
+
+		LockSampleRateToHMD = ini.GetBoolValue(section, "LockSamplerateToHMD", LockSampleRateToHMD);
+		SampleRate = (int)ini.GetLongValue(section, "Samplerate", SampleRate);
+		NumLights = (int)ini.GetLongValue(section, "NumLights", NumLights);
 
 		SwapLeftRight = ini.GetBoolValue(section, "SwapLeftRight", SwapLeftRight);
 		BottomToTopLeft = ini.GetBoolValue(section, "BottomToTopLeft", BottomToTopLeft);
@@ -86,9 +89,11 @@ struct Settings_Main
 	{
 		ini.SetBoolValue(section, "InterfaceConfigured", InterfaceConfigured);
 		ini.SetBoolValue(section, "EnableLightsOnStartup", EnableLightsOnStartup);
-		ini.SetLongValue(section, "NumLights", NumLights);
 		ini.SetBoolValue(section, "StartWithSteamVR", StartWithSteamVR);
-		ini.SetBoolValue(section, "SkipMirrorTextureRelease", SkipMirrorTextureRelease);
+
+		ini.SetBoolValue(section, "LockSampleRateToHMD", LockSampleRateToHMD);
+		ini.SetLongValue(section, "SampleRate", SampleRate);
+		ini.SetLongValue(section, "NumLights", NumLights);
 
 		ini.SetBoolValue(section, "SwapLeftRight", SwapLeftRight);
 		ini.SetBoolValue(section, "BottomToTopLeft", BottomToTopLeft);

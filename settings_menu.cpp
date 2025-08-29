@@ -314,7 +314,7 @@ if (bIsActiveTab) { ImGui::PopStyleColor(1); bIsActiveTab = false; }
 	{
 		IMGUI_BIG_SPACING;
 
-		ImGui::Text("Frame rate\n %.1fHz", 1000.0f / m_asyncData.FrameIntervalMS);
+		ImGui::Text("Sample rate\n %.1fHz", 1000.0f / m_asyncData.FrameIntervalMS);
 		ImGui::Text("Render time\n %.1fms", m_asyncData.RenderTimeMS);
 		ImGui::Text("LED time\n %.1fms", m_asyncData.PresentTimeMS);
 	}
@@ -363,11 +363,17 @@ if (bIsActiveTab) { ImGui::PopStyleColor(1); bIsActiveTab = false; }
 
 		IMGUI_BIG_SPACING;
 		
-		ImGui::BeginChild("Sep3", ImVec2(0, -ImGui::GetFrameHeightWithSpacing() - 180));
+		ImGui::BeginChild("Sep3", ImVec2(0, -ImGui::GetFrameHeightWithSpacing() - 140));
 		ImGui::EndChild();
 
-		ImGui::Checkbox("Skip Releasing Mirror Textures", &mainSettings.SkipMirrorTextureRelease);
-		TextDescription("Skips calling ReleaseMirrorTextureD3D11 every frame.\nThis a workaround for a SteamVR(?) bug that may cause hitching.\nDisable this if you notice memory leaks.");
+		ImGui::Checkbox("Lock Sample Rate to HMD VSync", &mainSettings.LockSampleRateToHMD);
+
+		BeginSoftDisabled(mainSettings.LockSampleRateToHMD);
+		ImGui::Spacing();
+		ImGui::SetNextItemWidth(280);
+		ImGui::InputInt("Maximum Sample Rate", &mainSettings.SampleRate, 1);
+		EndSoftDisabled(mainSettings.LockSampleRateToHMD);
+		TextDescription("Disable the Lock setting and adjust the sample rate down if the lights are flickering.");
 
 		IMGUI_BIG_SPACING;
 

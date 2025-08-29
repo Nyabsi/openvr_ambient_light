@@ -42,7 +42,8 @@ protected:
 
 	std::unique_ptr<ILEDInterface> m_interface;
 
-	LARGE_INTEGER m_lastRenderTime = {};
+	LARGE_INTEGER m_lastRenderStartTime = {};
+	LARGE_INTEGER m_lastRenderEndTime = {};
 	std::deque<float> m_frameIntervals;
 	std::deque<float> m_renderTimes;
 	std::deque<float> m_presentTimes;

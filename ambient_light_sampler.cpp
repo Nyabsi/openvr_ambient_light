@@ -187,7 +187,6 @@ void AmbientLightSampler::RunThread()
 			continue;
 		}
 
-
 		vr::EVROverlayError error = vr::VROverlay()->WaitFrameSync(WAIT_FRAME_TIMEOUT_MS);
 
 		if (error == vr::VROverlayError_TimedOut)
@@ -197,11 +196,21 @@ void AmbientLightSampler::RunThread()
 			m_interface->TurnOffLEDs();
 			std::this_thread::yield();
 			continue;
-		}	
+		}
 
-		LARGE_INTEGER preRenderTime = StartPerfTimer();
+		if (!mainSettings.LockSampleRateToHMD)
+		{
+			LARGE_INTEGER time = StartPerfTimer();
+			long timeLeftUS = static_cast<long>((1000.0f / max(mainSettings.SampleRate, 1) - GetPerfTimerDiff(m_lastRenderStartTime.QuadPart, time.QuadPart)) * 1000.0f);
 
-		
+			if (timeLeftUS > 0)
+			{
+				std::this_thread::sleep_for(std::chrono::microseconds(timeLeftUS));
+			}
+		}
+
+		m_lastRenderStartTime = StartPerfTimer();
+	
 
 		if (m_bGeometryUpdated)
 		{
@@ -220,7 +229,7 @@ void AmbientLightSampler::RunThread()
 				CalculateOutputColor(m_ledData->sampleOutput[i], (*m_writeData.get())[i]);
 			}
 
-			float renderTime = EndPerfTimer(preRenderTime.QuadPart);
+			float renderTime = EndPerfTimer(m_lastRenderStartTime.QuadPart);
 			LARGE_INTEGER prePresentTime = StartPerfTimer();
 
 			if (!m_bRun) { break; }
@@ -229,8 +238,8 @@ void AmbientLightSampler::RunThread()
 
 			float presentTime = EndPerfTimer(prePresentTime.QuadPart);
 
-			float frameInterval = EndPerfTimer(m_lastRenderTime);
-			m_lastRenderTime = StartPerfTimer();
+			float frameInterval = EndPerfTimer(m_lastRenderEndTime);
+			m_lastRenderEndTime = StartPerfTimer();
 
 			m_asyncData.OpenVRSampling = true;
 			m_asyncData.RenderTimeMS = UpdateAveragePerfTime(m_renderTimes, renderTime, 20);
