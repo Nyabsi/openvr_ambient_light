@@ -164,47 +164,39 @@ bool D3D11Renderer::InitRenderer()
 	return true;
 }
 
+
 bool D3D11Renderer::Render(std::shared_ptr<LEDSampleData> ledData)
 {
+
+	if (m_mirrorSRVLeft == nullptr)
 	{
-		if (!m_settingsManager->GetSettings_Main().SkipMirrorTextureRelease)
-		{
-			if (m_mirrorSRVLeft)
-			{
-				vr::VRCompositor()->ReleaseMirrorTextureD3D11(m_mirrorSRVLeft);
-				m_mirrorSRVLeft = nullptr;
-			}
-			if (m_mirrorSRVRight)
-			{
-				vr::VRCompositor()->ReleaseMirrorTextureD3D11(m_mirrorSRVRight);
-				m_mirrorSRVRight = nullptr;
-			}
-		}
-
-		vr::EVRCompositorError compError;
-
-		compError = vr::VRCompositor()->GetMirrorTextureD3D11(vr::Eye_Left, m_device.Get(), (void**)&m_mirrorSRVLeft);
+		vr::EVRCompositorError compError = vr::VRCompositor()->GetMirrorTextureD3D11(vr::Eye_Left, m_device.Get(), reinterpret_cast<void**>(&m_mirrorSRVLeft));
 
 		if (compError != vr::VRCompositorError_None)
 		{
 			g_logger->error("Error getting mirror texture!");
-			return false;
-		}
-
-		compError = vr::VRCompositor()->GetMirrorTextureD3D11(vr::Eye_Right, m_device.Get(), (void**)&m_mirrorSRVRight);
-
-		if (compError != vr::VRCompositorError_None)
-		{
-			g_logger->error("Error getting mirror texture!");
-			vr::VRCompositor()->ReleaseMirrorTextureD3D11(m_mirrorSRVLeft);
 			m_mirrorSRVLeft = nullptr;
 			return false;
 		}
 	}
 
+	if (m_mirrorSRVRight == nullptr)
+	{
+		vr::EVRCompositorError compError = vr::VRCompositor()->GetMirrorTextureD3D11(vr::Eye_Right, m_device.Get(), reinterpret_cast<void**>(&m_mirrorSRVRight));
+
+		if (compError != vr::VRCompositorError_None)
+		{
+			g_logger->error("Error getting mirror texture!");
+			m_mirrorSRVRight = nullptr;
+			return false;
+		}
+	}
+
+
 	uint32_t frameWidth = 1;
 	uint32_t frameHeight = 1;
 
+	// Assuming both frames are the same size.
 	{
 		ComPtr<ID3D11Resource> res;
 		ComPtr <ID3D11Texture2D> tex;
