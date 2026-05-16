@@ -7,6 +7,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 #include "implot.h"
 #include <cmath>
+#include <format>
 #include "mathutil.h"
 #include "settings_menu.h"
 

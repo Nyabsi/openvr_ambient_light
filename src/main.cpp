@@ -79,8 +79,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
     g_hInstance = hInstance;
 
-    g_iconOn = LoadIconW(g_hInstance, MAKEINTRESOURCE(IDI_ICON1_ON));
-    g_iconOff = LoadIconW(g_hInstance, MAKEINTRESOURCE(IDI_ICON2_OFF));
+    g_iconOn = LoadIconW(g_hInstance, MAKEINTRESOURCEW(IDI_ICON1_ON));
+    g_iconOff = LoadIconW(g_hInstance, MAKEINTRESOURCEW(IDI_ICON2_OFF));
     LoadStringW(g_hInstance, IDS_APP_TITLE, g_titleString, MAX_LOADSTRING);
     LoadStringW(g_hInstance, IDC_OPENVRAMBIENTLIGHT, g_windowClass, MAX_LOADSTRING);
 
@@ -116,7 +116,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         g_instanceMutex = CreateMutexW(NULL, TRUE, MUTEX_APP_KEY);
         if (GetLastError() == ERROR_ALREADY_EXISTS)
         {
-            HWND window = FindWindow(NULL, g_titleString);
+            HWND window = FindWindowW(NULL, g_titleString);
             if (bStartWindow && window != NULL)
             {
                 SendMessage(window, WM_COMMAND, IDM_TRAYOPEN, 0);

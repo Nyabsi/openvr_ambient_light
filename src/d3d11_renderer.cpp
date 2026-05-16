@@ -1,14 +1,12 @@
 
 
 #include <d3dcompiler.h>
-#include "external/renderdoc_app.h"
+#include <renderdoc_app.h>
 
 #include <dxgidebug.h>
 
 #include "shaders/gather_light_cs.h"
 #include "shaders/combine_light_cs.h"
-
-
 
 #include "d3d11_renderer.h"
 
@@ -119,17 +117,16 @@ bool D3D11Renderer::InitRenderer()
 		return false;
 	}
 
-
-	if (FAILED(m_device->CreateComputeShader(g_gatherLightCS, sizeof(g_gatherLightCS), nullptr, &m_gatherLightCS)))
+	if (FAILED(m_device->CreateComputeShader(g_gather_light_cs, sizeof(g_gather_light_cs), nullptr, &m_gatherLightCS)))
 	{
-		g_logger->error("g_gatherLightCS creation failure!");
+		g_logger->error("g_gather_light_cs creation failure!");
 		return false;
 	}
 	SET_DXGI_DEBUGNAME(m_gatherLightCS);
 
-	if (FAILED(m_device->CreateComputeShader(g_combineLightCS, sizeof(g_combineLightCS), nullptr, &m_combineLightCS)))
+	if (FAILED(m_device->CreateComputeShader(g_combine_light_cs, sizeof(g_combine_light_cs), nullptr, &m_combineLightCS)))
 	{
-		g_logger->error("g_gatherLightCS creation failure!");
+		g_logger->error("g_combine_light_cs creation failure!");
 		return false;
 	}
 	SET_DXGI_DEBUGNAME(m_combineLightCS);
